@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research — PECANetwork</title>
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="js/data.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--color-canvas)}
+a{color:var(--color-accent-blue-strong)}
+a:hover{color:var(--color-accent-blue)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react" src="js/components.jsx"></script>
+<script type="text/babel">
+const { TopNav, Footer, Tag, Badge, Button } = window;
+const D = window.SITE_DATA;
+
+const accentGrad = {
+  blue: 'linear-gradient(135deg, #dde7ff, #eef3ff)',
+  violet: 'linear-gradient(135deg, #e9e7fb, #f5f3ff)',
+  mint: 'linear-gradient(135deg, #dff5ee, #f0fbf7)',
+  peach: 'linear-gradient(135deg, #ffe9db, #fff4ec)',
+};
+
+function ItemCard({ item, expanded, onToggle }){
+  const isProject = item.type === 'project';
+  return (
+    <div style={{
+      gridColumn: expanded ? '1 / -1' : 'auto',
+      background:'var(--color-surface-card)', border:'var(--border-hairline)', borderRadius:'var(--radius-lg)',
+      boxShadow:'var(--shadow-card)', overflow:'hidden', display:'flex', flexDirection: expanded ? 'row' : 'column',
+      cursor:'pointer', transition:'grid-column 0.15s ease',
+    }}>
+      <div onClick={onToggle} style={{ display:'flex', flexDirection:'column', width: expanded ? 320 : '100%', flexShrink:0 }}>
+        <div style={{ position:'relative', height: expanded ? '100%' : 160, minHeight: expanded ? 220 : undefined, background: accentGrad[item.accent] || accentGrad.blue, overflow:'hidden' }}>
+          <img src="assets/illustrations/network-diagram-accent.svg" alt="" style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', opacity:0.7 }} />
+          <span style={{ position:'absolute', top:12, right:12, background: isProject ? 'var(--color-ink)' : 'var(--color-accent-blue-strong)', color:'#fff', fontSize:11, fontWeight:700, padding:'6px 14px', borderRadius:'var(--radius-pill)', textTransform:'uppercase', letterSpacing:'0.06em', fontFamily:'var(--font-body)' }}>
+            {isProject ? 'Project' : 'Publication'}
+          </span>
+        </div>
+        <div style={{ padding:'var(--space-lg)', flex:1 }}>
+          <div style={{ fontFamily:'var(--font-display)', fontSize:'var(--text-title-md-size)', fontWeight:600, color:'var(--color-ink)', lineHeight:1.35, marginBottom:10 }}>{item.title}</div>
+          {!isProject && <div style={{ fontSize:'var(--text-body-sm-size)', color:'var(--color-muted)', marginBottom:8, fontFamily:'var(--font-body)' }}>{item.journal}</div>}
+          <div style={{ fontSize:'var(--text-caption-size)', color:'var(--color-muted-soft)', fontFamily:'var(--font-body)' }}>{item.people}</div>
+          {!expanded && <div style={{ marginTop:16, fontSize:13, fontWeight:600, color:'var(--color-accent-blue-strong)', fontFamily:'var(--font-body)' }}>{isProject ? 'View project →' : 'View abstract →'}</div>}
+        </div>
+      </div>
+      {expanded && (
+        <div style={{ padding:'var(--space-xl)', flex:1, borderLeft:'var(--border-hairline)' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:20 }}>
+            <div style={{ fontFamily:'var(--font-body)', fontSize:15, color:'var(--color-body)', lineHeight:1.7, maxWidth:640, whiteSpace:'pre-line' }}>
+              {isProject ? item.description : item.abstract}
+            </div>
+            <button onClick={onToggle} style={{ border:'none', background:'var(--color-surface-strong)', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16, color:'var(--color-muted)', flexShrink:0 }}>×</button>
+          </div>
+          {item.link && item.link.href !== '#' && (
+            <div style={{ marginTop:20 }}>
+              <Button href={item.link.href} variant="secondary" size="sm">{item.link.label}</Button>
+            </div>
+          )}
+          {isProject && item.videos && item.videos.length > 0 && (
+            <div style={{ marginTop:28 }}>
+              <div style={{ fontSize:'var(--text-caption-upper-size)', fontWeight:700, letterSpacing:'var(--text-caption-upper-tracking)', textTransform:'uppercase', color:'var(--color-muted-soft)', marginBottom:14, fontFamily:'var(--font-body)' }}>Related videos</div>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:16 }}>
+                {item.videos.map((v,i) => (
+                  <div key={i} style={{ position:'relative', paddingTop:'56.25%', borderRadius:'var(--radius-md)', overflow:'hidden', background:'#000' }}>
+                    <iframe src={v} title={`${item.title} video ${i+1}`} style={{ position:'absolute', inset:0, width:'100%', height:'100%', border:'none' }} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App(){
+  const [filter, setFilter] = React.useState('all');
+  const [expandedId, setExpandedId] = React.useState(null);
+  const all = [...D.projects, ...D.publications];
+  const filtered = filter === 'all' ? all : all.filter(i => i.type === filter);
+
+  return (
+    <React.Fragment>
+      <TopNav active="research.html" />
+      <section style={{ padding:'72px 32px 40px', maxWidth:'var(--container-max)', margin:'0 auto' }}>
+        <div style={{ fontFamily:'var(--font-body)', fontSize:'var(--text-caption-upper-size)', fontWeight:600, letterSpacing:'var(--text-caption-upper-tracking)', textTransform:'uppercase', color:'var(--color-accent-blue-strong)', marginBottom:12 }}>Research</div>
+        <h1 style={{ fontFamily:'var(--font-display)', fontSize:'var(--text-display-lg-size)', fontWeight:'var(--text-display-lg-weight)', letterSpacing:'var(--text-display-lg-tracking)', color:'var(--color-ink)', margin:'0 0 32px', maxWidth:700 }}>
+          Running projects and published work
+        </h1>
+        <div style={{ display:'flex', gap:10, marginBottom:44 }}>
+          <Tag active={filter==='all'} onClick={()=>setFilter('all')}>All</Tag>
+          <Tag active={filter==='project'} onClick={()=>setFilter('project')}>Projects</Tag>
+          <Tag active={filter==='publication'} onClick={()=>setFilter('publication')}>Publications</Tag>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(320px, 1fr))', gap:28 }}>
+          {filtered.map((item, idx) => {
+            const key = item.type + idx;
+            return (
+              <ItemCard key={key} item={item} expanded={expandedId === key} onToggle={() => setExpandedId(expandedId === key ? null : key)} />
+            );
+          })}
+        </div>
+      </section>
+      <Footer />
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

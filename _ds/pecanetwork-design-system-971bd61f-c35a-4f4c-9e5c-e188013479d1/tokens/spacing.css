@@ -1,0 +1,16 @@
+/* PECANetwork — Spacing tokens. Base unit 4px. */
+:root {
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-xxxl: 64px;
+  --space-section: 112px;
+  --space-section-sm: 72px;
+
+  --container-max: 1200px;
+  --container-padding: 32px;
+}

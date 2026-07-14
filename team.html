@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Network — PECANetwork</title>
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="js/data.js"></script>
+<script src="image-slot.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--color-canvas)}
+a{color:var(--color-accent-blue-strong)}
+a:hover{color:var(--color-accent-blue)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react" src="js/components.jsx"></script>
+<script type="text/babel">
+const { TopNav, Footer, Tag } = window;
+const D = window.SITE_DATA;
+
+const countryList = ['All', ...new Set(D.members.map(m => m.country))];
+
+function MemberCard({ m }){
+  const id = 'member-' + m.name.toLowerCase().replace(/[^a-z]+/g, '-');
+  return (
+    <div style={{ background:'var(--color-surface-card)', border:'var(--border-hairline)', borderRadius:'var(--radius-lg)', padding:'var(--space-lg)', display:'flex', flexDirection:'column', gap:14, fontFamily:'var(--font-body)' }}>
+      <image-slot id={id} shape="circle" style={{ width:76, height:76 }} placeholder="Photo" src={m.photo || undefined}></image-slot>
+      <div>
+        <div style={{ fontFamily:'var(--font-display)', fontWeight:600, fontSize:'var(--text-title-sm-size)', color:'var(--color-ink)', lineHeight:1.3 }}>{m.name}</div>
+        <div style={{ fontSize:'var(--text-body-sm-size)', color:'var(--color-body)', marginTop:4 }}>{m.role}</div>
+        <div style={{ fontSize:'var(--text-caption-size)', color:'var(--color-muted-soft)', marginTop:6, lineHeight:1.4 }}>{m.institution}</div>
+        <div style={{ fontSize:'var(--text-caption-size)', color:'var(--color-muted-soft)', marginTop:2 }}>{m.country}</div>
+      </div>
+      {m.link !== '#' ? (
+        <a href={m.link} target="_blank" rel="noopener noreferrer" style={{ fontSize:'var(--text-body-sm-size)', fontWeight:600, color:'var(--color-accent-blue-strong)', textDecoration:'none' }}>
+          Institutional page →
+        </a>
+      ) : (
+        <span style={{ fontSize:'var(--text-body-sm-size)', fontWeight:600, color:'var(--color-muted-soft)' }}>Link coming soon</span>
+      )}
+    </div>
+  );
+}
+
+function App(){
+  const [country, setCountry] = React.useState('All');
+  const filtered = country === 'All' ? D.members : D.members.filter(m => m.country === country);
+
+  return (
+    <React.Fragment>
+      <TopNav active="team.html" />
+      <section style={{ padding:'72px 32px 40px', maxWidth:'var(--container-max)', margin:'0 auto' }}>
+        <div style={{ fontFamily:'var(--font-body)', fontSize:'var(--text-caption-upper-size)', fontWeight:600, letterSpacing:'var(--text-caption-upper-tracking)', textTransform:'uppercase', color:'var(--color-accent-blue-strong)', marginBottom:12 }}>Network</div>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', flexWrap:'wrap', gap:20, marginBottom:36 }}>
+          <h1 style={{ fontFamily:'var(--font-display)', fontSize:'var(--text-display-lg-size)', fontWeight:'var(--text-display-lg-weight)', letterSpacing:'var(--text-display-lg-tracking)', color:'var(--color-ink)', margin:0, maxWidth:600 }}>
+            Collaborating Researchers
+          </h1>
+        </div>
+        <div style={{ display:'flex', gap:10, marginBottom:40, flexWrap:'wrap' }}>
+          {countryList.map(c => <Tag key={c} active={country===c} onClick={()=>setCountry(c)}>{c}</Tag>)}
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:20 }}>
+          {filtered.map((m) => <MemberCard key={m.name} m={m} />)}
+        </div>
+      </section>
+      <Footer />
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
