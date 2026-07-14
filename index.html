@@ -16,7 +16,7 @@ body{margin:0;background:var(--color-canvas)}
 a{color:var(--color-accent-blue-strong)}
 a:hover{color:var(--color-accent-blue)}
 @keyframes logo-marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.logo-track{display:flex;align-items:center;gap:72px;width:max-content;animation:logo-marquee 28s linear infinite}
+.logo-track{display:flex;align-items:center;gap:72px;width:max-content;animation:logo-marquee 75s linear infinite}
 @media (prefers-reduced-motion: reduce){.logo-track{animation:none}}
 </style>
 </head>
@@ -36,7 +36,7 @@ function Hero(){
         <div style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'6px 14px', borderRadius:'var(--radius-pill)', background:'rgba(255,255,255,0.75)', border:'var(--border-hairline)', fontSize:'var(--text-caption-size)', fontWeight:600, color:'var(--color-accent-blue-strong)', marginBottom:24, fontFamily:'var(--font-body)' }}>
           International Research Network
         </div>
-        <h1 style={{ fontFamily:'var(--font-display)', fontSize:'var(--text-display-xl-size)', fontWeight:'var(--text-display-xl-weight)', lineHeight:'var(--text-display-xl-leading)', letterSpacing:'var(--text-display-xl-tracking)', color:'var(--color-ink)', margin:'0 0 20px' }}>
+        <h1 className="hero-title" style={{ fontFamily:'var(--font-display)', fontSize:'var(--text-display-xl-size)', fontWeight:'var(--text-display-xl-weight)', lineHeight:'var(--text-display-xl-leading)', letterSpacing:'var(--text-display-xl-tracking)', color:'var(--color-ink)', margin:'0 0 20px' }}>
           Mapping the networks<br/>behind psychopathology
         </h1>
         <p style={{ fontFamily:'var(--font-body)', fontSize:'var(--text-title-md-size)', color:'var(--color-body)', lineHeight:1.6, margin:'0 auto 36px', maxWidth:600 }}>
@@ -63,7 +63,7 @@ function StatsStrip(){
   ];
   return (
     <section style={{ background:'var(--color-canvas)', padding:'48px 32px', borderTop:'var(--border-hairline)', borderBottom:'var(--border-hairline)' }}>
-      <div style={{ maxWidth:'var(--container-max)', margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:24 }}>
+      <div className="stats-grid" style={{ maxWidth:'var(--container-max)', margin:'0 auto', display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:24, justifyItems:'center' }}>
         {stats.map(s => <StatBlock key={s.label} {...s} />)}
       </div>
     </section>
@@ -71,12 +71,15 @@ function StatsStrip(){
 }
 
 function LogoMarquee(){
-  const logos = (D.logos || []).concat(D.logos || []);
-  if(!logos.length) return null;
+  const base = D.logos || [];
+  if(!base.length) return null;
+  const REPEAT = Math.max(6, Math.ceil(24 / base.length));
+  const block = Array.from({ length: REPEAT }, () => base).flat();
+  const track = [...block, ...block];
   return (
     <section style={{ background:'#fff', padding:'32px 0', overflow:'hidden' }}>
       <div className="logo-track">
-        {logos.map((l, i) => (
+        {track.map((l, i) => (
           <img key={l.alt+i} src={l.src} alt={l.alt} style={{ height:38, objectFit:'contain', flexShrink:0 }} />
         ))}
       </div>
@@ -94,7 +97,7 @@ function ApproachTeaser(){
     <section style={{ padding:'var(--space-section) 32px', background:'var(--color-canvas)' }}>
       <div style={{ maxWidth:'var(--container-max)', margin:'0 auto' }}>
         <SectionHeading eyebrow="The network approach" title="Why this matters for clinical practice" />
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:20, marginTop:48 }}>
+        <div className="pillars-grid" style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:20, marginTop:48 }}>
           {items.map(it => <FeatureCard key={it.title} {...it} />)}
         </div>
       </div>

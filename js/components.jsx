@@ -7,7 +7,33 @@ function TopNav({ active }) {
     { label: 'Network', href: 'team.html' },
   ];
   return (
-    <header style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', background: 'rgba(251,252,255,0.85)', backdropFilter: 'blur(10px)', borderBottom: 'var(--border-hairline)', fontFamily: 'var(--font-body)', position: 'sticky', top: 0, zIndex: 20 }}>
+    <React.Fragment>
+    <style>{`
+      @media (max-width: 720px){
+        .site-header{padding:0 16px !important}
+        .site-header .nav-label{display:none}
+        .site-header nav{gap:16px !important}
+        .site-cta{display:none !important}
+      }
+      @media (max-width: 900px){
+        .stats-grid{grid-template-columns:repeat(2,1fr) !important}
+        .pillars-grid{grid-template-columns:1fr !important}
+        .research-grid{grid-template-columns:1fr !important}
+        .members-grid{grid-template-columns:repeat(2,1fr) !important}
+      }
+      @media (max-width: 640px){
+        section{padding-left:20px !important;padding-right:20px !important}
+        h1{font-size:32px !important;line-height:1.15 !important}
+        .hero-title{font-size:38px !important}
+        .item-card{flex-direction:column !important}
+        .item-media{width:100% !important}
+        .members-grid{grid-template-columns:1fr 1fr !important;gap:12px !important}
+      }
+      @media (max-width: 420px){
+        .members-grid{grid-template-columns:1fr !important}
+      }
+    `}</style>
+    <header className="site-header" style={{ height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', background: 'rgba(251,252,255,0.85)', backdropFilter: 'blur(10px)', borderBottom: 'var(--border-hairline)', fontFamily: 'var(--font-body)', position: 'sticky', top: 0, zIndex: 20 }}>
       <a href="index.html" style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, letterSpacing: '-0.01em', color: 'var(--color-ink)', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <circle cx="4" cy="16" r="2.2" fill="#3b5cf5" />
@@ -21,14 +47,15 @@ function TopNav({ active }) {
         {links.map((l) => (
           <a key={l.href} href={l.href} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-nav-size)', fontWeight: 'var(--text-nav-weight)', color: active === l.href ? 'var(--color-ink)' : 'var(--color-muted)', textDecoration: 'none' }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: active === l.href ? 'var(--color-accent-blue)' : 'var(--color-muted-soft)' }} />
-            {l.label}
+            <span className="nav-label">{l.label}</span>
           </a>
         ))}
       </nav>
-      <a href="team.html" style={{ height: 40, padding: '0 18px', borderRadius: 'var(--radius-md)', background: 'var(--gradient-cta)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
+      <a href="team.html" className="site-cta" style={{ height: 40, padding: '0 18px', borderRadius: 'var(--radius-md)', background: 'var(--gradient-cta)', color: '#fff', border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)', display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
         Meet the network
       </a>
     </header>
+    </React.Fragment>
   );
 }
 
@@ -133,7 +160,7 @@ function ContentCard({ title, description }) {
 
 function StatBlock({ value, label }) {
   return (
-    <div style={{ fontFamily: 'var(--font-body)' }}>
+    <div style={{ fontFamily: 'var(--font-body)', textAlign: 'center' }}>
       <div style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--text-display-lg-size)', fontWeight: 700, color: 'var(--color-ink)', letterSpacing: '-0.01em' }}>{value}</div>
       <div style={{ fontSize: 'var(--text-body-sm-size)', color: 'var(--color-muted)', marginTop: 4 }}>{label}</div>
     </div>

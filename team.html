@@ -65,7 +65,7 @@ function App(){
         <div style={{ display:'flex', gap:10, marginBottom:40, flexWrap:'wrap' }}>
           {countryList.map(c => <Tag key={c} active={country===c} onClick={()=>setCountry(c)}>{c}</Tag>)}
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:20 }}>
+        <div className="members-grid" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:20 }}>
           {filtered.map((m) => <MemberCard key={m.name} m={m} />)}
         </div>
       </section>
